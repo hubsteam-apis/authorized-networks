@@ -1,4 +1,4 @@
-# Infrastructure Security: Authorized Access Networks
+# Authorized Access Networks
 
 This repository serves as the **Centralized Source of Truth** for network authorization across the entire **Hubteam** ecosystem. It maintains a rigorous list of pre-approved IP addresses permitted to interact with our internal services, APIs, and infrastructure components.
 
