@@ -1,39 +1,71 @@
-# Authorized Networks
+# Infrastructure Security: Authorized Access Networks
 
-This repository contains the list of IP addresses authorized to access resources across all Hubteam projects. This document provides a comprehensive explanation of what this list is, why it exists, and how it is used.
+This repository serves as the **Centralized Source of Truth** for network authorization across the entire **Hubteam** ecosystem. It maintains a rigorous list of pre-approved IP addresses permitted to interact with our internal services, APIs, and infrastructure components.
 
-## What are Authorized Networks?
+---
 
-Authorized networks, in this context, refer to a list of specific IP addresses that have been pre-approved for access to our internal systems and services. This is a security measure known as an **IP whitelist** or **allowlist**. Only traffic originating from these approved IP addresses will be permitted to connect to our resources. Any connection attempt from an IP address not on this list will be automatically denied.
+## 1. Concept and Purpose
 
-## Why Do We Use an IP Whitelist?
+In modern cloud infrastructure, security is paramount. We employ a **Zero Trust Architecture** principle where access is not granted by default. Instead, we utilize an **IP Allowlist** (historically known as a *whitelist*) to define the boundaries of our trusted network.
 
-The primary reason for implementing an IP whitelist is to enhance the security of our infrastructure. By restricting access to a known and trusted set of IP addresses, we can significantly reduce the risk of unauthorized access and potential cyberattacks. This approach provides a strong first line of defense against malicious actors attempting to compromise our systems.
+> **Definition:** An Authorized Network is a specific IP address or range that has been vetted and granted permission to bypass perimeter firewalls and security gateways.
 
-Key benefits of using an IP whitelist include:
+### Why This is Essential
+| Feature | Benefit |
+| :--- | :--- |
+| **Attack Surface Reduction** | By blocking all unknown IPs, we eliminate 99% of automated bot attacks and unauthorized scans. |
+| **Identity Verification** | IP validation acts as an additional layer of identity, ensuring requests originate from known physical or cloud locations. |
+| **Compliance & Auditing** | Maintaining a public list of authorized networks allows for transparent auditing of who *can* access the infrastructure. |
 
-- **Enhanced Security:** It drastically limits the attack surface by blocking all traffic from unknown sources.
-- **Controlled Access:** It ensures that only authorized personnel and systems can interact with our sensitive resources.
-- **Reduced Risk:** It helps prevent common attack vectors such as brute-force attacks, credential stuffing, and other automated threats.
+---
 
-## How is the List of Authorized Networks Maintained?
+## 2. Technical Implementation
 
-The list of authorized IP addresses is centrally managed and stored in a single JSON file within this repository. This centralized approach ensures consistency and simplifies the process of updating the list.
+The authorization data is stored in a structured format to allow for automated consumption by firewalls, load balancers, and application-level middleware.
 
-- **Storage:** The list is stored in the `networks.json` file in the root of this repository.
-- **Format:** The `networks.json` file contains a simple JSON array of strings, where each string is an IP address.
-- **Updates:** Any changes to the list of authorized networks must be made by updating the `networks.json` file and committing the changes to this repository. This ensures that all changes are version-controlled and auditable.
+### Storage Architecture
+- **Location:** The primary data resides in `networks.json` within the root directory.
+- **Access Method:** Systems can fetch this list programmatically via the GitHub Raw API.
+- **Format:** A standardized JSON array of strings representing IPv4 addresses.
 
-## How to Check if Your IP Address is Authorized
+> [!IMPORTANT]
+> **Real-time Synchronization:** Our internal security agents periodically poll the [JSON source](https://raw.githubusercontent.com/hubsteam-apis/authorized-networks/main/networks.json) to update firewall rules dynamically across all regions.
 
-If you are experiencing authorization or access errors, the first step is to verify whether your current public IP address is included in the authorized networks list. You can do this by checking the contents of the `networks.json` file in this repository.
+---
 
-You can view the raw JSON file directly at the following URL:
+## 3. How to Verify Your Access
 
-[https://raw.githubusercontent.com/hubsteam-apis/authorized-networks/main/networks.json](https://raw.githubusercontent.com/hubsteam-apis/authorized-networks/main/networks.json)
+If you are encountering **403 Forbidden** errors or **Connection Timed Out** messages when trying to reach Hubteam services, your current network may not be authorized.
 
-## What to Do if Your IP Address is Not on the List
+1.  **Identify Your IP:** Visit a service like `ifconfig.me` or `icanhazip.com` to find your public IPv4 address.
+2.  **Check the List:** Search for your IP address in the [networks.json](https://raw.githubusercontent.com/hubsteam-apis/authorized-networks/main/networks.json) file.
+3.  **Validate Format:** Ensure your IP is listed exactly as it appears in your browser, without extra spaces or hidden characters.
 
-If your IP address is not on the list and you require access to our resources, you will need to request that your IP address be added. Please follow your organization's internal procedures for requesting access. This typically involves contacting your team lead or the IT department with a justification for why your IP address needs to be added to the whitelist.
+---
 
-**Note:** For security reasons, we do not accept pull requests or direct requests from the public to add IP addresses to this list. All requests must come through official internal channels.
+## 4. Requesting Access & Support
+
+If your IP address is **not** on the authorized list and you have a legitimate business or development need to access our resources, you must initiate a formal authorization request.
+
+### Contacting Hubteam
+We do **not** process access requests via GitHub Pull Requests or Issues for security and privacy reasons. Instead, please reach out directly to the **Hubteam Support & Infrastructure Team** through any of our official channels:
+
+*   **Official Websites:** Access our support portals at our main domains.
+*   **Telegram:** Contact our official support bot or community managers.
+*   **WhatsApp:** Use our dedicated business lines for urgent infrastructure requests.
+*   **Discord:** Open a support ticket in the `#infrastructure-access` channel within the Hubteam server.
+
+> [!WARNING]
+> **Verification Required:** Be prepared to provide a valid justification and proof of identity. Unauthorized or suspicious requests will be ignored and the originating IP may be permanently blacklisted.
+
+---
+
+## 5. Security Best Practices
+
+- **Avoid Public Wi-Fi:** We strongly discourage adding public or unsecured network IPs to this list.
+- **Use Static IPs:** If possible, request authorization for static IPs or VPN exit nodes rather than dynamic residential IPs.
+- **Periodic Review:** Hubteam regularly purges inactive or suspicious IPs from this list to maintain a lean and secure perimeter.
+
+---
+*Last Updated: February 2026*
+*Maintained by Hubteam Infrastructure Security*
